@@ -25,6 +25,27 @@ use Illuminate\Validation\Factory as ValidationFactory;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Translator;
 
+class BelongsToMany extends Illuminate\Database\Eloquent\Relations\BelongsToMany
+{
+    /**
+     * Save a new model and attach it to the parent model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  array  $joining
+     * @param  bool   $touch
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function forceSave(Model $model, array $joining = array(), $touch = true)
+    {
+        $model->forceSave(null, null, array('touch' => false));
+
+        $this->attach($model->getKey(), $joining, $touch);
+
+        return $model;
+    }
+}
+
+
 /**
  * Ardent - Self-validating Eloquent model base class
  *
